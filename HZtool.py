@@ -101,7 +101,7 @@ for hz in all_hz:
     date = arcpy.GetParameterAsText(4)
 
     if date:
-            hz = by_date(hz, date)
+        hz = by_date(hz, date)
 
     if creation_type != "Visi":
         hz = by_type(hz, creation_type, "{}_By_Date".format(out_featureclass))

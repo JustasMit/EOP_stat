@@ -9,9 +9,9 @@ def kz_stats(kz):
 kz = arcpy.GetParameterAsText(0)
 scratchGDB = arcpy.env.scratchGDB
 out_featureclass = os.path.join(scratchGDB, kz.rsplit(".", 1)[-1])       
-creation_type = arcpy.GetParameterAsText(0)
-teritory = arcpy.GetParameterAsText(0)
-date = arcpy.GetParameterAsText(0)
+creation_type = arcpy.GetParameterAsText(2)
+teritory = arcpy.GetParameterAsText(3)
+date = arcpy.GetParameterAsText(4)
 
 if date:
     kz = by_date(kz, date)
