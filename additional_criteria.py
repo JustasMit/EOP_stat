@@ -2,11 +2,7 @@ import arcpy
 import datetime
 
 def by_date(layer, date):
-    if len(date) > 10:
-        date_formatted = datetime.datetime.strptime(date, "%d/%m/%Y %H:%M:%S").strftime("%Y-%m-%d %H:%M:%S")
-    else:
-        date_formatted = datetime.datetime.strptime(date, "%d/%m/%Y").strftime("%Y-%m-%d")
-    return arcpy.MakeFeatureLayer_management(layer, "Date_Temp", "last_edited_date > '{}'".format(date_formatted))
+    return arcpy.MakeFeatureLayer_management(layer, "Date_Temp", "last_edited_date > '{}'".format(date))
 
 def by_type(layer, type, output):
     if type == "Sukurtas":

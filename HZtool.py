@@ -1,5 +1,7 @@
 import arcpy
 import os
+
+from arcpy.management import Append
 from additional_criteria import *
 
 def hz_line(hz):
@@ -89,26 +91,37 @@ def hz_stats(hz):
     elif shape == "Point":
         return hz_point(hz)
 
-
-
+all_hz = []
 total_area = 0
-all_hz = arcpy.GetParameterAsText(0).split(";")
+scratchGDB = arcpy.env.scratchGDB
+
+choice = arcpy.GetParameterAsText(1)
+if choice == "Linijos":
+    all_hz.append(os.path.join(os.getcwd(), "jupiteris2.sde\\VP_SDE1.INFRASTR.KELIO_ZENKLAI\\VP_SDE1.INFRASTR.KZ_HZ_Linijos"))
+elif choice == "Plotai":
+    all_hz.append(os.path.join(os.getcwd(), "jupiteris2.sde\\VP_SDE1.INFRASTR.KELIO_ZENKLAI\\VP_SDE1.INFRASTR.KZ_HZ_Plotai"))
+elif choice == "Taškai":
+    all_hz.append(os.path.join(os.getcwd(), "jupiteris2.sde\\VP_SDE1.INFRASTR.KELIO_ZENKLAI\\VP_SDE1.INFRASTR.KZ_HZ_Taskai"))
+elif choice == "Visi":
+    hz_name = {1: "KZ_HZ_Linijos", 2: "KZ_HZ_Plotai", 3: "KZ_HZ_Taskai"}
+    for i in [1, 2, 3]:
+        all_hz.append(os.path.join(os.getcwd(), "jupiteris2.sde\\VP_SDE1.INFRASTR.KELIO_ZENKLAI\\VP_SDE1.INFRASTR.{}".format(hz_name[i])))
+
+
+creation_type = arcpy.GetParameterAsText(2)
+teritory = arcpy.GetParameterAsText(3)
+date = arcpy.GetParameterAsText(4)
+
 for hz in all_hz:
-    scratchGDB = arcpy.env.scratchGDB
     out_featureclass = os.path.join(scratchGDB, hz.rsplit(".", 1)[-1])
-    creation_type = arcpy.GetParameterAsText(2)
-    teritory = arcpy.GetParameterAsText(3)
-    date = arcpy.GetParameterAsText(4)
 
     if date:
         hz = by_date(hz, date)
-
     if creation_type != "Visi":
         hz = by_type(hz, creation_type, "{}_By_Date".format(out_featureclass))
 
     hz = by_teritory(hz, teritory, "{}_By_Teritory".format(out_featureclass))
-
     total_area += hz_stats(hz)
         
-arcpy.SetParameter(1, total_area)
+arcpy.SetParameter(0, total_area)
 arcpy.Delete_management(scratchGDB)
