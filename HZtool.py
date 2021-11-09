@@ -113,15 +113,15 @@ scratchGDB = arcpy.env.scratchGDB
 
 choice = arcpy.GetParameterAsText(1)
 if choice == "Linijos":
-    all_hz.append(os.path.join(os.getcwd(), "jupiteris2.sde\\VP_SDE1.INFRASTR.KELIO_ZENKLAI\\VP_SDE1.INFRASTR.KZ_HZ_Linijos"))
+    all_hz.append(r"\\venera\projektai\Geoproc\EOP_stat\jupiteris2.sde\VP_SDE1.INFRASTR.KELIO_ZENKLAI\VP_SDE1.INFRASTR.KZ_HZ_Linijos")
 elif choice == "Plotai":
-    all_hz.append(os.path.join(os.getcwd(), "jupiteris2.sde\\VP_SDE1.INFRASTR.KELIO_ZENKLAI\\VP_SDE1.INFRASTR.KZ_HZ_Plotai"))
+    all_hz.append(r"\\venera\projektai\Geoproc\EOP_stat\jupiteris2.sde\VP_SDE1.INFRASTR.KELIO_ZENKLAI\VP_SDE1.INFRASTR.KZ_HZ_Plotai")
 elif choice == "Taskai":
-    all_hz.append(os.path.join(os.getcwd(), "jupiteris2.sde\\VP_SDE1.INFRASTR.KELIO_ZENKLAI\\VP_SDE1.INFRASTR.KZ_HZ_Taskai"))
+    all_hz.append(r"\\venera\projektai\Geoproc\EOP_stat\jupiteris2.sde\VP_SDE1.INFRASTR.KELIO_ZENKLAI\VP_SDE1.INFRASTR.KZ_HZ_Taskai")
 elif choice == "Visi":
     hz_name = {1: "KZ_HZ_Linijos", 2: "KZ_HZ_Plotai", 3: "KZ_HZ_Taskai"}
     for i in [1, 2, 3]:
-        all_hz.append(os.path.join(os.getcwd(), "jupiteris2.sde\\VP_SDE1.INFRASTR.KELIO_ZENKLAI\\VP_SDE1.INFRASTR.{}".format(hz_name[i])))
+        all_hz.append(r"\\venera\projektai\Geoproc\EOP_stat\jupiteris2.sde\VP_SDE1.INFRASTR.KELIO_ZENKLAI\VP_SDE1.INFRASTR.{}".format(hz_name[i]))
 
 
 creation_type = arcpy.GetParameterAsText(2)

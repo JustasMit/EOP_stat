@@ -27,7 +27,7 @@ def kz_stats(kz):
 scratchGDB = arcpy.env.scratchGDB
 out_featureclass = os.path.join(scratchGDB, "KZ_TEMP")  
 
-kz = os.path.join(os.getcwd(), "jupiteris2.sde\\VP_SDE1.INFRASTR.KELIO_ZENKLAI\\VP_SDE1.INFRASTR.KZ")
+kz = r"\\venera\projektai\Geoproc\EOP_stat\jupiteris2.sde\VP_SDE1.INFRASTR.KELIO_ZENKLAI\VP_SDE1.INFRASTR.KZ"
 creation_type = arcpy.GetParameterAsText(1)
 teritory = arcpy.GetParameterAsText(2)
 date = arcpy.GetParameterAsText(3)

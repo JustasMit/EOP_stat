@@ -58,7 +58,7 @@ elif choice == "Plotai":
     infr_name = "KZ_INFSTR_Plotai"
 elif choice == "Taskai":
     infr_name = "KZ_INFSTR_Taskai"
-infr = os.path.join(os.getcwd(), "jupiteris2.sde\\VP_SDE1.INFRASTR.KELIO_ZENKLAI\\VP_SDE1.INFRASTR.{}".format(infr_name))
+infr = r"\\venera\projektai\Geoproc\EOP_stat\jupiteris2.sde\VP_SDE1.INFRASTR.KELIO_ZENKLAI\VP_SDE1.INFRASTR.{}".format(infr_name)
 creation_type = arcpy.GetParameterAsText(2)
 teritory = arcpy.GetParameterAsText(3)
 date = arcpy.GetParameterAsText(4)
