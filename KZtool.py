@@ -1,16 +1,25 @@
 import arcpy
 import os
 
-def by_date(layer, date):
-    return arcpy.MakeFeatureLayer_management(layer, "Date_Temp", "last_edited_date > '{}'".format(date))
-
-def by_type(layer, type, output):
-    if type == "Sukurtas":
-        return arcpy.MakeFeatureLayer_management(layer, type, "created_date IS NOT NULL and created_date = last_edited_date")
-    elif type == "Redaguotas":
-        return arcpy.MakeFeatureLayer_management(layer, type, "created_date <> last_edited_date")
-    elif type == "Sukurtas arba redaguotas":
-        return arcpy.MakeFeatureLayer_management(layer, type, "(created_date IS NOT NULL and created_date = last_edited_date) or created_date <> last_edited_date")
+def by_date(layer, date, type):
+    if type != "Visi" and date:
+        if type == "Sukurtas":
+            return arcpy.MakeFeatureLayer_management(layer, type, "(created_date IS NOT NULL and created_date = last_edited_date) and last_edited_date > '{}'".format(date))
+        elif type == "Redaguotas":
+            return arcpy.MakeFeatureLayer_management(layer, type, "(created_date <> last_edited_date) and last_edited_date > '{}'".format(date))
+        elif type == "Sukurtas arba redaguotas":
+            return arcpy.MakeFeatureLayer_management(layer, type, "((created_date IS NOT NULL and created_date = last_edited_date) or created_date <> last_edited_date) and last_edited_date > '{}'".format(date))
+    elif type != "Visi" and date == "":
+        if type == "Sukurtas":
+            return arcpy.MakeFeatureLayer_management(layer, type, "created_date IS NOT NULL and created_date = last_edited_date")
+        elif type == "Redaguotas":
+            return arcpy.MakeFeatureLayer_management(layer, type, "created_date <> last_edited_date")
+        elif type == "Sukurtas arba redaguotas":
+            return arcpy.MakeFeatureLayer_management(layer, type, "(created_date IS NOT NULL and created_date = last_edited_date) or created_date <> last_edited_date")
+    elif date:
+        return arcpy.MakeFeatureLayer_management(layer, "Date_Temp", "last_edited_date > '{}'".format(date))
+    else:
+        return layer
 
 def by_teritory(layer, teritory, output):
     arcpy.MakeFeatureLayer_management("https://services1.arcgis.com/usA3lHW20rGU6glp/ArcGIS/rest/services/Zenklu_prieziuros_teritorijos_view/FeatureServer/0", "Teritory")
@@ -32,10 +41,7 @@ creation_type = arcpy.GetParameterAsText(1)
 teritory = arcpy.GetParameterAsText(2)
 date = arcpy.GetParameterAsText(3)
 
-if date:
-    kz = by_date(kz, date)
-if creation_type != "Visi":
-    kz = by_type(kz, creation_type, "{}_By_Date".format(out_featureclass))
+kz = by_date(kz, date, creation_type)
 kz = by_teritory(kz, teritory, "{}_By_Teritory".format(out_featureclass))
 
 statistic = kz_stats(kz)
