@@ -77,4 +77,4 @@ infr = by_teritory(infr, teritory, "{}_By_Teritory".format(out_featureclass))
 statistic = infr_stats(infr)
 
 arcpy.SetParameter(0, statistic)
-arcpy.Delete_management(scratchGDB)
+arcpy.Delete_management("{}_By_Teritory".format(out_featureclass))
