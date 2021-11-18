@@ -1,5 +1,6 @@
 import arcpy
 import os
+import json
 
 def by_date(layer, date, type):
     if type != "Visi" and date:
@@ -141,8 +142,8 @@ teritory = arcpy.GetParameterAsText(3)
 date = arcpy.GetParameterAsText(4)
 marking = arcpy.GetParameterAsText(5)
 
-key_to_num = {'Suma': 0, 'Plastikas': 1, 'Dazai': 2, 'Metalas': 3, 'Plyteles': 4, 'Kitas': 5, 'Asfaltas': 6, 'Termoplastas': 7, 'Antislydiminis plastikas': 8}
-num_to_key = {0: 'Suma', 1: 'Plastikas', 2: 'Dazai', 3: 'Metalas', 4: 'Plyteles', 5: 'Kitas', 6: 'Asfaltas', 7: 'Termoplastas', 8: 'Antislydiminis plastikas'}
+key_to_num = {"Suma": 0, "Plastikas": 1, "Dazai": 2, "Metalas": 3, "Plyteles": 4, "Kitas": 5, "Asfaltas": 6, "Termoplastas": 7, "Antislydiminis plastikas": 8}
+num_to_key = {0: "Suma", 1: "Plastikas", 2: "Dazai", 3: "Metalas", 4: "Plyteles", 5: "Kitas", 6: "Asfaltas", 7: "Termoplastas", 8: "Antislydiminis plastikas"}
 
 if marking:
     markings = {"Suma": 0}
@@ -169,6 +170,6 @@ for hz in all_hz:
     
 if marking:
     markings = dict((num_to_key[key], value) for (key, value) in markings.items())
-    arcpy.SetParameter(0, markings)
+    arcpy.SetParameter(0, json.dumps(markings))
 else:
     arcpy.SetParameter(0, total_area)
