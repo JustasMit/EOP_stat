@@ -166,10 +166,11 @@ for hz in all_hz:
     else:
         for i in range(1, 9):
             total_area += hz_stats(hz, i)
-    arcpy.Delete_management("{}_By_Teritory".format(out_featureclass))
     
 if marking:
     markings = dict((num_to_key[key], value) for (key, value) in markings.items())
     arcpy.SetParameter(0, json.dumps(markings))
 else:
     arcpy.SetParameter(0, total_area)
+
+arcpy.Delete_management(scratchGDB)

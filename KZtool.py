@@ -47,4 +47,4 @@ kz = by_teritory(kz, teritory, "{}_By_Teritory".format(out_featureclass))
 statistic = kz_stats(kz)
 
 arcpy.SetParameter(0, statistic)
-arcpy.Delete_management("{}_By_Teritory".format(out_featureclass))
+arcpy.Delete_management(scratchGDB)
