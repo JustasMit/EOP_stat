@@ -4,19 +4,22 @@ import os
 def by_date(layer, date, type):
     if date == "":
         if type == "Sukurtas arba redaguotas":
-            return arcpy.MakeFeatureLayer_management(layer, type, "created_date IS NOT NULL OR last_edited_date IS NOT NULL OR created_date IS NULL OR last_edited_date IS NULL")
+            return layer
         elif type == "Sukurtas":
             return arcpy.MakeFeatureLayer_management(layer, type, "created_date IS NOT NULL OR (created_date IS NULL AND last_edited_date IS NULL)")
         elif type == "Redaguotas":
-            return arcpy.MakeFeatureLayer_management(layer, type, "NOT (created_date IS NOT NULL OR (created_date IS NULL AND last_edited_date IS NULL))")
+            return arcpy.MakeFeatureLayer_management(layer, type, "created_date <> last_edited_date OR (created_date IS NULL AND last_edited_date IS NOT NULL)")
+            # geras? return arcpy.MakeFeatureLayer_management(layer, type, "created_date IS NULL AND last_edited_date IS NOT NULL")
+            # return arcpy.MakeFeatureLayer_management(layer, type, "NOT (created_date IS NOT NULL OR (created_date IS NULL AND last_edited_date IS NULL))")
+# 61195 40574 23674      24071 3450 23674
             
     elif date:
         if type == "Sukurtas arba redaguotas":
-            return arcpy.MakeFeatureLayer_management(layer, type, "(last_edited_date IS NOT NULL And last_edited_date > '{}') or created_date > '{}'".format(date, date))
+            return arcpy.MakeFeatureLayer_management(layer, type, "(last_edited_date IS NOT NULL AND last_edited_date > '{}') OR created_date > '{}'".format(date, date))
         if type == "Sukurtas":
-            return arcpy.MakeFeatureLayer_management(layer, type, "created_date IS NOT NULL And created_date > '{}'".format(date))
+            return arcpy.MakeFeatureLayer_management(layer, type, "created_date > '{}'".format(date))
         if type == "Redaguotas":
-            return arcpy.MakeFeatureLayer_management(layer, type, "(last_edited_date IS NOT NULL and created_date <> last_edited_date) And last_edited_date > '{}'".format(date))  
+            return arcpy.MakeFeatureLayer_management(layer, type, "(created_date <> last_edited_date OR (created_date IS NULL AND last_edited_date IS NOT NULL)) AND last_edited_date > '{}'".format(date))  
     
 def by_teritory(layer, teritory, output):
     arcpy.MakeFeatureLayer_management("https://services1.arcgis.com/usA3lHW20rGU6glp/ArcGIS/rest/services/Zenklu_prieziuros_teritorijos_view/FeatureServer/0", "Teritory")
