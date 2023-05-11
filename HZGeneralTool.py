@@ -2,6 +2,7 @@ import arcpy
 import os
 import json
 import unicodedata
+import tempfile, shutil
 
 # def by_territory(layer, territories, output):
 #     arcpy.MakeFeatureLayer_management("https://services1.arcgis.com/usA3lHW20rGU6glp/ArcGIS/rest/services/Zenklu_prieziuros_teritorijos_view/FeatureServer/0", "Territory")
@@ -102,13 +103,19 @@ def hz_stats(hz, marking):
     elif shape == "Point":
         return hz_point(hz, marking)
 
+sdeTempPath = tempfile.mkdtemp()
+arcpy.CreateDatabaseConnection_management(sdeTempPath,'SDE1.sde','SQL_SERVER','jupiteris2','DATABASE_AUTH','geodinter', 'matavimai3', 'SAVE_USERNAME','VP_SDE1')
+arcpy.env.workspace = sdeTempPath + '\SDE1.sde'
+
 all_hz = []
 total_area = 0
-scratchGDB = arcpy.env.scratchGDB
 
 hz_name = {1: "KZ_HZ_Linijos", 2: "KZ_HZ_Plotai", 3: "KZ_HZ_Taskai"}
 for i in [1, 2, 3]:
-  all_hz.append(r"\\venera\projektai\Geoproc\EOP_stat\jupiteris2(1).sde\VP_SDE1.INFRASTR.KELIO_ZENKLAI\VP_SDE1.INFRASTR.{}".format(hz_name[i]))
+  all_hz.append(fr'VP_SDE1.INFRASTR.KELIO_ZENKLAI/VP_SDE1.INFRASTR.{hz_name[i]}')
+  
+arcpy.AddMessage(all_hz)
+arcpy.AddMessage(sdeTempPath)
 
 territories = ["Šiaurinis", "Rytinis", "Pietinis", "Vakarinis", "Centrinis"]
 marking = arcpy.GetParameterAsText(1)
@@ -129,10 +136,9 @@ territories_dict = {}
 for territory in territories:
     territory_markings = {}
     for hz in all_hz:
-        out_featureclass = os.path.join(scratchGDB, hz.rsplit(".", 1)[-1])
         
         arcpy.MakeFeatureLayer_management("Territory", territory, "SENIUNIJA = '{}'".format(territory))
-        hz = arcpy.analysis.Clip(hz, territory, "{}_By_Territory".format(out_featureclass) + "_" + territory, None)
+        hz = arcpy.analysis.Clip(hz, territory, fr'in_memory/{territory}', None)
 
         if marking:
             for mark in markings:
@@ -171,4 +177,5 @@ if marking:
 else:
     arcpy.SetParameter(0, total_area)
 
-arcpy.Delete_management(scratchGDB)
+arcpy.Delete_management("in_memory")
+shutil.rmtree(sdeTempPath)
